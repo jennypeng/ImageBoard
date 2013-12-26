@@ -20,7 +20,7 @@ block content
                         th(class = "inputd")
                             p(class="inputtext") File
                         th
-                            input(name='image', type='file')
+                            input(name='image', type='file' required)
                         
                 
         
@@ -35,4 +35,11 @@ block content
 
             p(class = "content")= post.content
             
-    
+block footer
+    if pages
+        br
+        - for(var i = 1; i <= pages; i++){
+        |[
+        a(href = "/posts/p/"+i)= i
+        |] 
+        - }

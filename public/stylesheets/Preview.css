@@ -1,0 +1,17 @@
+#preview{
+    margin: 5px;
+    padding: 5px;
+    -webkit-box-shadow: 2px 2px 0px 0px #999;
+    position: absolute;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: #CCCCCC;
+    background-color: white;
+    z-index: 10;
+}
+#imgPreview{
+    max-height:100%;
+    max-width:100%;
+    margin: 5px;
+}

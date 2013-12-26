@@ -6,6 +6,7 @@ var path = require('path');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/test');
+const ppp = 3;
 
 
 var app = express();
@@ -36,15 +37,7 @@ app.get('/newpost', routes.newpost);
 var fs = require('fs');
 app.post('/addpost', routes.addpost(db));
 app.post('/post/:id/addreply', routes.addreply(db));
-// app.get('/uploads/fullsize/:file', function (req, res){
-// 	file = req.params.file;
-// 	var img = fs.readFileSync(__dirname + "/uploads/fullsize/" + file);
-// 	res.writeHead(200, {'Content-Type': 'image/jpg' });
-// 	res.end(img, 'binary');
-
-// });
-
-
+app.get('/posts/p/:page', routes.pPosts(db, ppp));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

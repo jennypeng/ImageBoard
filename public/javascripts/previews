@@ -1,0 +1,23 @@
+document.getElementById("hello").onmouseover = function(e){
+    if(document.getElementById("square")){
+       return;
+    }
+    a = document.createElement("div")
+    a.id = "preview"
+    b = document.createElement("img")
+    b.id = "imgPreview"
+    b.src = e.target.src
+    a.appendChild(b)
+    a.style.left= e.x+"px"
+    a.style.top = e.y+"px"
+    document.body.appendChild(a)
+    document.onmousemove = function(e){
+        a.style.left = e.x+10+"px";
+        a.style.top = e.y+-10+"px";
+    }
+    }
+
+document.getElementById("hello").onmouseout = function(e){
+   document.body.removeChild(document.getElementById("preview"));
+}
+    

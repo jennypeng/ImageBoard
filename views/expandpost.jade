@@ -40,8 +40,9 @@ block content
             div(class = "postbox")
                 h6()= reply.username
                     span(class="datetime")= " " + post.date
-                a(href="http://localhost:3000" + reply.imagePath, target="_blank")
-                    img(class = "fileThumb", src=reply.imagePath)
+                if reply.imagePath
+                    a(href="http://localhost:3000" + reply.imagePath, target="_blank")
+                        img(class = "fileThumb", src=reply.imagePath)
                 p(class = "content")=reply.reply
             
             

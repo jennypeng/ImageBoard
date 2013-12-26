@@ -4,8 +4,15 @@ html
     title= title
 
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/Preview.css')
+
   body
     h1 /CalChan/ - CAL NEETS 5 EVER
     center
         img(src="http://i.imgur.com/XlyLvRP.jpg", width="400")
+        br
+        input(id="previewCheck" type="checkbox")
+        label Toggle hover previews
     block content
+    block footer
+  script(src = "/javascripts/previews.js")
