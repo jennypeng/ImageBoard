@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    div(class = "newThread")
+        form(name="addpost",enctype="multipart/form-data", method="post",action="/addpost")
+            table
+                tbody
+                    tr(align = "left")
+                        th(class = "inputd")
+                            p(class = "inputtext") Name
+                        th
+                            input(type="text", size=30, placeholder="username", name="username")
+                            button(type="submit") Submit
+                    tr
+                        th(class = "inputd")
+                            p(class = "inputtext") Post
+                        th
+                            textarea(name="text", rows=5, cols=40, placeholder="content", name="content")
+                    tr
+                        th(class = "inputd")
+                            p(class="inputtext") File
+                        th
+                            input(name='image', type='file')
+                        
+                
+        
+    each post, i in posts.reverse()
+        div(class = "postbox")
+
+            h6()= post.username 
+                span(class="datetime")= post.date
+                a(class = "expandpost", href="http://localhost:3000/post/" + post._id) +
+            a(href="http://localhost:3000" + post.imagePath, target="_blank")
+                img(class = "fileThumb", src=post.imagePath)
+
+            p(class = "content")= post.content
+            
+    

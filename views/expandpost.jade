@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    each post, i in posts.reverse()
+        center
+            div(class = "postingmode")
+                h6(class = "postingmodetext")  Posting Mode: Reply
+        .newThread
+            form(name="addreply",enctype="multipart/form-data", method="post",action= post._id + "/addreply")
+                table
+                    tbody
+                        tr(align = "left")
+                            th(class = "inputd")
+                                p(class = "inputtext") Name
+                            th
+                                input(type="text", size=30, placeholder="username", name="username")
+                                button(type="submit") Submit
+                        tr
+                            th(class = "inputd")
+                                p(class = "inputtext") Post
+                            th
+                                textarea(name="text", rows=5, cols=40, placeholder="reply", name="reply")
+                        tr
+                            th(class = "inputd")
+                                p(class="inputtext") File
+                            th
+                                input(name='image', type='file')
+                            
+                        
+        a(href="http://localhost:3000" + post.imagePath, target="_blank")
+            img(class = "OPpic", src=post.imagePath)
+        div
+
+            h6()= post.username 
+                span(class="datetime")= post.date
+
+
+            p(class = "content")= post.content
+        each reply, i in post.replies
+            div(class = "postbox")
+                h6()= reply.username
+                    span(class="datetime")= " " + post.date
+                a(href="http://localhost:3000" + reply.imagePath, target="_blank")
+                    img(class = "fileThumb", src=reply.imagePath)
+                p(class = "content")=reply.reply
+            
+            
