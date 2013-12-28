@@ -38,6 +38,7 @@ var fs = require('fs');
 app.post('/addpost', routes.addpost(db));
 app.post('/post/:id/addreply', routes.addreply(db));
 app.get('/posts/p/:page', routes.pPosts(db, ppp));
+app.get('/post/:id/:file', routes.dlPosts(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

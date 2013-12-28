@@ -9,6 +9,7 @@ exports.expandpost = function(db){
 		var collection = db.get('postcollection');
 		var ObjectId = require('mongodb').ObjectID;
 		collection.find({_id: {$in: [ObjectId(req.params.id)]}},{}, function(e,docs){
+			console.log(docs);
 			res.render('expandpost', {
 				"posts" : docs
 			});
@@ -177,4 +178,39 @@ exports.addpost = function(db) {
 		});
 });
 }
+}
+var zip = require("node-native-zip");
+exports.dlPosts = function(db) {
+	return function(req, res) {
+		var archive = new zip();
+        var id = req.params.id;
+		var collection = db.get('postcollection');
+        var ObjectId = require('mongodb').ObjectID;
+        collection.findOne({"_id": ObjectId(id)}, ["imagePath", "replies"],
+        function(err, doc){
+        	if(err){res.send(err);}
+        	else{
+        		var toBeZipped = [];
+        		function parsePath(path){
+        			return path.split("/").pop();
+        		}
+        		toBeZipped.push({"path": "routes"+doc.imagePath, "name":parsePath(doc.imagePath)});
+        		for(var i = 0; i < doc.replies.length; i++){
+        			toBeZipped.push({"path": "routes"+doc.replies[i].imagePath, "name": parsePath(doc.replies[i].imagePath)});
+        		}
+        		archive.addFiles(toBeZipped,
+        			function(err){
+        				if(err){
+        					console.log(err);
+        				}
+        				else{
+        					var buff = archive.toBuffer();
+        					res.send(buff);
+        				}
+        			});
+        	}
+
+        }
+       	);
+	}
 }
