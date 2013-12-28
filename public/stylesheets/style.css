@@ -118,3 +118,11 @@ tr{
 img{
     margin: 10px;
 }
+
+#dlLink{
+    margin: 5px;
+    display: block;
+}
+hr{
+    width: 100%;
+}

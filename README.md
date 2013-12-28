@@ -22,3 +22,4 @@ Flourishes:
 2. Layout Redesign
 3. Deployment
 4. Optimization
+5. parallax scroll
