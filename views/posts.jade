@@ -38,7 +38,7 @@ block content
 block footer
     if pages
         br
-        - for(var i = 1; i <= pages; i++){
+        - for(var i = 1; i <= 3 && i <= pages; i++){
         |[
         a(href = "/posts/p/"+i)= i
         |] 

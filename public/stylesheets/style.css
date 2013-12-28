@@ -3,9 +3,18 @@
     align: top;
     margin: 10px;
 }
+
 .OPpic{
     max-height: 350px;
     float: left;
+}
+iframe{
+    float: right;
+    width="10";
+    height="10";
+}
+textarea{
+    maxlength="250";
 }
 .postingmodetext{
     font-family: Tahoma,sans-serif;
@@ -82,7 +91,7 @@ p{
 }
 .postbox{
     background-color: #CEEDCA;
-    min-height: 140px;
+    min-height: 70px;
     min-width:500px;
     text-align:left;
     box-shadow: 1px 1px 1px #888888;

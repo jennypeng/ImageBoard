@@ -11,6 +11,7 @@ const ppp = 3;
 
 var app = express();
 
+// indexing
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -28,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'routes')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
+// link processing
 app.get('/', routes.index);
 app.get('/post/:id', routes.expandpost(db));
 app.get('/users', user.list);
@@ -36,9 +37,10 @@ app.get('/posts', routes.posts(db));
 app.get('/newpost', routes.newpost);
 var fs = require('fs');
 app.post('/addpost', routes.addpost(db));
+app.post('/quickreply/:id/addquickreply', routes.addquickreply(db));
 app.post('/post/:id/addreply', routes.addreply(db));
 app.get('/posts/p/:page', routes.pPosts(db, ppp));
-app.get('/post/:id/:file', routes.dlPosts(db));
+app.get('/quickreply/:id', routes.quickreply(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -1,0 +1,35 @@
+doctype html
+html
+  head
+    script(type="text/javascript", src = "/javascripts/dragiframe.js")
+    title= title
+    link(rel='stylesheet', href='/stylesheets/quickreply.css')
+  body(onLoad="addHandle(document.getElementsByTagName('body').item(0), window);", style="cursor: move;"
+)
+    div(id = "toolbar")
+        p() = adsfadfd
+    each post, i in posts.reverse()
+        center
+        .newThread
+            form(name="addreply",enctype="multipart/form-data", method="post",action= post._id + "/addquickreply")
+                table
+                    tbody
+                        tr(align = "left")
+                            th(class = "inputd")
+                                p(class = "inputtext") Name
+                            th
+                                input(type="text", size=30, placeholder="username", name="username")
+                                button(type="submit") Submit
+                        tr
+                            th(class = "inputd")
+                                p(class = "inputtext") Post
+                            th
+                                textarea(name="text", rows=5, cols=40, placeholder="reply", name="reply")
+                        tr
+                            th(class = "inputd")
+                                p(class="inputtext") File
+                            th
+                                input(name='image', type='file')
+                            
+  script(src = "/javascripts/iframedrag.js")
+  script(src = "/javascripts/dragiframe.js")

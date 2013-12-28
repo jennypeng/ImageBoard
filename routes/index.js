@@ -1,4 +1,4 @@
-
+var replynum = 1000; //initialize to 1000 because post numbers less look retarded
 exports.index = function(req, res){
 
 	res.render('index', { title: 'Express' });
@@ -9,7 +9,6 @@ exports.expandpost = function(db){
 		var collection = db.get('postcollection');
 		var ObjectId = require('mongodb').ObjectID;
 		collection.find({_id: {$in: [ObjectId(req.params.id)]}},{}, function(e,docs){
-			console.log(docs);
 			res.render('expandpost', {
 				"posts" : docs
 			});
@@ -17,11 +16,23 @@ exports.expandpost = function(db){
 	};
 
 };
+exports.quickreply = function(db){
+	return function(req, res) {
+	var collection = db.get('postcollection');
+	var ObjectId = require('mongodb').ObjectID;
+		collection.find({_id: {$in: [ObjectId(req.params.id)]}},{}, function(e,docs){
+			res.render('quickreply', {
+				"posts" : docs
+			});
+		});
+	}
+
+}
 //posts page
 exports.posts = function(db) {
 	return function(req, res) {
 		var collection = db.get('postcollection');
-		collection.find({},{},function(e,docs){
+		collection.find({ $query: {}, $orderby: { posted : 1 } },{},function(e,docs){
 			res.render('posts', {
 				"posts" : docs
 			});
@@ -31,10 +42,13 @@ exports.posts = function(db) {
 exports.pPosts = function(db, ppp) { //ppp is posts per page
 	return function(req, res) {
 		var collection = db.get('postcollection');
+        //collection.ensureIndex( { "posted": 1 } )
 		collection.count({}, function(err, count){
+			console.log(count);
+            var pagemax = 3;
 			var pages = Math.ceil(count/ppp); 
-			var index = count-(req.params.page)*ppp; //what index should it find from
-			if(index < 0){ //WHAT IF ITS NOT DIVISIBLE BY PPP? 
+            var index = count-(req.params.page)*ppp; //what index should it find from
+            if(index < 0){ //WHAT IF ITS NOT DIVISIBLE BY PPP? 
 				var temp = ppp+index;
 				index = 0;
 				collection.find({},{"skip": index, "limit": temp},function(e,docs){
@@ -60,6 +74,70 @@ exports.pPosts = function(db, ppp) { //ppp is posts per page
 exports.newpost = function(req, res){
 	res.render('newpost', { title: 'Add New Post' });
 };
+exports.addquickreply = function(db) {
+    return function(req, res) {
+        var userName = req.body.username;
+        if (!userName) userName = "Anonymous";
+        var reply0 = req.body.reply;
+        var id = req.params.id;
+        var datetime = new Date();
+        var time = datetime.getDate();
+        var collection = db.get('postcollection');
+        var ObjectId = require('mongodb').ObjectID;
+        var fs = require('fs');
+        fs.readFile(req.files.image.path, function (err, data) {
+            var imageName = req.files.image.name
+            if (!imageName) {
+            	replynum += 1;
+            	collection.update({_id: {$in: [ObjectId(id)]}}, {$set: {posted: time}});
+                collection.update({_id: {$in: [ObjectId(id)]}},
+                    {$push: {replies: {postnum: replynum, date: datetime, username: userName, reply: reply0}}
+
+                }, function (err, doc) {
+                        if (err) {
+                            res.send("There was a problem adding the information to the database.");
+                        }
+                        else {
+                            res.location("quickreply/" + id); 
+                            res.redirect("quickreply/" + id);
+                        }
+                });
+            } else {
+                var newPath = __dirname+"\\uploads\\fullsize\\" + imageName;
+                var thumbPath = __dirname+"\\uploads\\thumbs\\" + imageName;
+
+                // fs.writeFile(newPath, data, function (err) {
+                //     var im = require('imagemagick');
+                //     im.resize({
+                //         srcPath: newPath,
+                //         dstPath: thumbPath,
+                //         width: 200
+                //     }, function(err, stdout, stderr) {
+                //         if (err) console.log(err);
+                //     });
+                //     console.log(err);
+                // });
+            	collection.update({_id: {$in: [ObjectId(id)]}}, {$set: {posted: time}});
+            	console.log(replynum);
+                collection.update({_id: {$in: [ObjectId(id)]}},
+                    {$push: {replies: {postnum: replynum, imagePath: "/uploads/fullsize/"+imageName, date: datetime, username: userName, reply: reply0}}
+
+                }, function (err, doc) {
+                    if (err) {
+                        res.send("There was a problem adding the information to the database.");
+                    }
+                    else {
+                    	replynum += 1;
+                        res.location("post/" + id); 
+                        res.redirect("post/" + id);
+                    }
+                });
+
+            }
+        });
+
+    }
+}
 //reply form
 exports.addreply = function(db) {
     return function(req, res) {
@@ -68,14 +146,18 @@ exports.addreply = function(db) {
         var reply0 = req.body.reply;
         var id = req.params.id;
         var datetime = new Date();
+        var time = datetime.getDate();
         var collection = db.get('postcollection');
         var ObjectId = require('mongodb').ObjectID;
         var fs = require('fs');
         fs.readFile(req.files.image.path, function (err, data) {
             var imageName = req.files.image.name
             if (!imageName) {
+            	console.log("niggaaa" + replynum);
+            	replynum += 1;
+            	collection.update({_id: {$in: [ObjectId(id)]}}, {$set: {posted: time}});
                 collection.update({_id: {$in: [ObjectId(id)]}},
-                    {$push: {replies: {date: datetime, username: userName, reply: reply0}}
+                    {$push: {replies: {postnum: replynum, date: datetime, username: userName, reply: reply0}}
 
                 }, function (err, doc) {
                         if (err) {
@@ -101,14 +183,17 @@ exports.addreply = function(db) {
                 //     });
                 //     console.log(err);
                 // });
+            	collection.update({_id: {$in: [ObjectId(id)]}}, {$set: {posted: time}});
+            	console.log(replynum);
                 collection.update({_id: {$in: [ObjectId(id)]}},
-                    {$push: {replies: {imagePath: "/uploads/fullsize/"+imageName, date: datetime, username: userName, reply: reply0}}
+                    {$push: {replies: {postnum: replynum, imagePath: "/uploads/fullsize/"+imageName, date: datetime, username: userName, reply: reply0}}
 
                 }, function (err, doc) {
                     if (err) {
                         res.send("There was a problem adding the information to the database.");
                     }
                     else {
+                    	replynum += 1;
                         res.location("post/" + id); 
                         res.redirect("post/" + id);
                     }
@@ -157,12 +242,15 @@ exports.addpost = function(db) {
 		// Set our collection
 		var collection = db.get('postcollection');
 		var datetime = new Date();
+		var current = datetime.getDate();
 		// Submit to the DB
 		collection.insert({
 			"username" : userName,
+			"index" : 0, // temp
 			"content" : content,
 			"imagePath" : "/uploads/fullsize/"+imageName,
 			"date" : datetime,
+			"posted" : current,
 			"replies" : []
 		}, function (err, doc) {
 			if (err) {
@@ -178,39 +266,4 @@ exports.addpost = function(db) {
 		});
 });
 }
-}
-var zip = require("node-native-zip");
-exports.dlPosts = function(db) {
-	return function(req, res) {
-		var archive = new zip();
-        var id = req.params.id;
-		var collection = db.get('postcollection');
-        var ObjectId = require('mongodb').ObjectID;
-        collection.findOne({"_id": ObjectId(id)}, ["imagePath", "replies"],
-        function(err, doc){
-        	if(err){res.send(err);}
-        	else{
-        		var toBeZipped = [];
-        		function parsePath(path){
-        			return path.split("/").pop();
-        		}
-        		toBeZipped.push({"path": "routes"+doc.imagePath, "name":parsePath(doc.imagePath)});
-        		for(var i = 0; i < doc.replies.length; i++){
-        			toBeZipped.push({"path": "routes"+doc.replies[i].imagePath, "name": parsePath(doc.replies[i].imagePath)});
-        		}
-        		archive.addFiles(toBeZipped,
-        			function(err){
-        				if(err){
-        					console.log(err);
-        				}
-        				else{
-        					var buff = archive.toBuffer();
-        					res.send(buff);
-        				}
-        			});
-        	}
-
-        }
-       	);
-	}
 }
