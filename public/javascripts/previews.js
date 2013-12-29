@@ -1,5 +1,4 @@
-classes = document.getElementsByClassName("fileThumb");
-
+var classes, checkbox;
 function previewOn(e){
     if(document.getElementById("square")){
        return;
@@ -66,22 +65,24 @@ function disablePreview(classes){
         document.body.getElementsByClassName("OPpic")[0].onmouseout = null; 
     }
 }
-var checkbox = document.getElementById("previewCheck");
-checkbox.onclick = function(e){
-    if(e.target.checked){
-        enablePreview(classes);
-    }
-    else{
-        disablePreview(classes);
-    }
-}
 
 window.onload = function(){
+    classes = document.getElementsByClassName("fileThumb");
+    console.log(classes);
+    checkbox = document.getElementById("previewCheck");
     if(localStorage.preview){
         checkbox.checked = parseInt(localStorage.preview);
     }
     if(checkbox.checked){
         enablePreview(classes);
+    }
+    checkbox.onclick = function(e){
+        if(e.target.checked){
+            enablePreview(classes);
+        }
+        else{
+            disablePreview(classes);
+        }
     }
 }
 

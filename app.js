@@ -41,6 +41,7 @@ app.post('/quickreply/:id/addquickreply', routes.addquickreply(db));
 app.post('/post/:id/addreply', routes.addreply(db));
 app.get('/posts/p/:page', routes.pPosts(db, ppp));
 app.get('/quickreply/:id', routes.quickreply(db));
+app.get('/post/:id/:file', routes.dlPosts(db));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

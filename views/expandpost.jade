@@ -62,9 +62,8 @@ html
                         a(href="http://localhost:3000" + reply.imagePath, target="_blank")
                             img(class = "fileThumb", src=reply.imagePath)
                     p(class = "content")=reply.reply
-
-  
-
+        hr
+        a(href = "/post/"+posts[0]._id+"/"+posts[0]._id+".zip" id = "dlLink") [ Download All Images ]
 
             
             
