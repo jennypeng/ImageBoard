@@ -6,12 +6,11 @@ var path = require('path');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/test');
-const ppp = 3;
+const ppp = 5; //number of posts per page
 
 
 var app = express();
 
-// indexing
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -30,17 +29,15 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 // link processing
-app.get('/', routes.index);
+app.get('/', routes.pPosts(db, ppp));
 app.get('/post/:id', routes.expandpost(db));
 app.get('/users', user.list);
-app.get('/posts', routes.posts(db));
+app.get('/posts', routes.pPosts(db, ppp));
 app.get('/newpost', routes.newpost);
 var fs = require('fs');
 app.post('/addpost', routes.addpost(db));
-app.post('/quickreply/:id/addquickreply', routes.addquickreply(db));
 app.post('/post/:id/addreply', routes.addreply(db));
 app.get('/posts/p/:page', routes.pPosts(db, ppp));
-app.get('/quickreply/:id', routes.quickreply(db));
 app.get('/post/:id/:file', routes.dlPosts(db));
 
 http.createServer(app).listen(app.get('port'), function(){

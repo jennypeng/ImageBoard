@@ -1,69 +1,52 @@
+extends layout
 
-doctype html
-html
-    head
-        script(type="text/javascript", src = "/javascripts/previews.js")
-        script(type="text/javascript", src = "/javascripts/quickreply.js")
-        script(type="text/javascript", src = "/javascripts/dragiframe.js")
-        title = title
-        link(rel='stylesheet', href='/stylesheets/style.css')
-        link(rel='stylesheet', href='/stylesheets/Preview.css')
-    body
-        h1 /CalChan/ - CAL NEETS 5 EVER
+block content
+    each post, i in posts.reverse()
         center
-            img(src="http://i.imgur.com/XlyLvRP.jpg", width="400")
-            br
-            input(id="previewCheck" type="checkbox")
-            label Toggle hover previews
-        each post, i in posts.reverse()
-            center
-                iframe(style="visibility:hidden", src = "http://localhost:3000/quickreply/" + post._id, id = "quickreply", name = "quickreply")
-                div(class = "postingmode")
-                    h6(class = "postingmodetext")  Posting Mode: Reply
-            .newThread
-                form(name="addreply",enctype="multipart/form-data", method="post",action= post._id + "/addreply")
-                    table
-                        tbody
-                            tr(align = "left")
-                                th(class = "inputd")
-                                    p(class = "inputtext") Name
-                                th
-                                    input(type="text", size=30, placeholder="username", name="username")
-                                    button(type="submit") Submit
-                            tr
-                                th(class = "inputd")
-                                    p(class = "inputtext") Post
-                                th
-                                    textarea(name="text", rows=5, cols=40, placeholder="reply", name="reply")
-                            tr
-                                th(class = "inputd")
-                                    p(class="inputtext") File
-                                th
-                                    input(name='image', type='file')
-                                
+            div(class = "postingmode")
+                h6(class = "postingmodetext")  Posting Mode: Reply
+        .newThread
+            form(name="addreply",enctype="multipart/form-data", method="post",action= post._id + "/addreply")
+                table
+                    tbody
+                        tr(align = "left")
+                            th(class = "inputd")
+                                p(class = "inputtext") Name
+                            th
+                                input(type="text", size=30, placeholder="username", name="username")
+                                button(type="submit") Submit
+                        tr
+                            th(class = "inputd")
+                                p(class = "inputtext") Post
+                            th
+                                textarea(name="text", rows=5, cols=40, placeholder="reply", name="reply")
+                        tr
+                            th(class = "inputd")
+                                p(class="inputtext") File
+                            th
+                                input(name='image', type='file')
                             
-            a(href="http://localhost:3000" + post.imagePath, target="_blank")
-                img(class = "OPpic", src=post.imagePath)
-            div
+                        
+        a(href="http://localhost:3000" + post.imagePath, target="_blank")
+            img(class = "OPpic", src=post.imagePath)
+        div
 
-                h6()= post.username 
-                    span(class="datetime")= post.date
+            h6()= post.username 
+                span(class="datetime")= post.date
 
 
-                p(class = "content")= post.content
-            each reply, i in post.replies
-                div(class = "postbox")
-                    h6()= reply.username
-                        span(class="datetime")= " " + reply.date + " No: "
-                        span(class = "datetime")
-                            a(onClick = "javascript: showIFrame()", id = "replynum", target = "_blank")
-                                = reply.postnum
-                    if reply.imagePath
-                        a(href="http://localhost:3000" + reply.imagePath, target="_blank")
-                            img(class = "fileThumb", src=reply.imagePath)
-                    p(class = "content")=reply.reply
-        hr
-        a(href = "/post/"+posts[0]._id+"/"+posts[0]._id+".zip" id = "dlLink") [ Download All Images ]
+            p(class = "content")= post.content
+        each reply, i in post.replies
+            div(class = "postbox")
+                h6()= reply.username
+                    span(class="datetime")= " " + post.date
+                if reply.imagePath
+                    a(href="http://localhost:3000" + reply.imagePath, target="_blank")
+                        img(class = "fileThumb", src=reply.imagePath)
+                p(class = "content")=reply.reply
 
+block footer
+    hr
+    a(href = "/post/"+posts[0]._id+"/"+posts[0]._id+".zip" id = "dlLink") [ Download All Images ]
             
             
