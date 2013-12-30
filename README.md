@@ -1,8 +1,8 @@
 ImageBoard
 ==========
 
-Open source image board with mongodb and nodejs. 
-Allows for easy image downloading and discussion.
+Open source image board implemented with Mongodb(monk), Express, Jade and Nodejs. 
+Allows for easy image distribution and discussion.
 
 To do List:
 ==========
