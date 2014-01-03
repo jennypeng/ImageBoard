@@ -4,6 +4,11 @@ ImageBoard
 Open source image board implemented with Mongodb(monk), Express, Jade and Nodejs. 
 Allows for easy image distribution and discussion.
 
+Screenshot:
+==========
+![screenshot](/screenshot.png)
+
+
 To do List:
 ==========
 1. Post death by page limit

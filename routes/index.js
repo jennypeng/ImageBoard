@@ -92,6 +92,9 @@ exports.addreply = function(db) {
             } else {
                 var newPath = __dirname+"\\uploads\\fullsize\\" + imageName;
                 var thumbPath = __dirname+"\\uploads\\thumbs\\" + imageName;
+                fs.writeFile(newPath, data, function (err) {
+                    console.log(err);
+                });
                 collection.update({_id: {$in: [ObjectId(id)]}}, {$set: {posted: time}});
                 collection.update({_id: {$in: [ObjectId(id)]}},
                     {$push: {replies: {postnum: replynum, imagePath: "/uploads/fullsize/"+imageName, date: datetime, username: userName, reply: reply0}}
